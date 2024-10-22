@@ -1,0 +1,47 @@
+version: '2'  # Docker Compose version.
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest  # Zookeeper service.
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181  # Port for Zookeeper.
+      ZOOKEEPER_TICK_TIME: 2000  # Zookeeper tick time.
+    ports:
+      - 22181:2181  # Port mapping for Zookeeper.
+    networks:
+      - kafka-network  # Connect to Kafka network.
+
+  kafka:
+    image: confluentinc/cp-kafka:latest  # Kafka service.
+    depends_on:
+      - zookeeper  # Wait for Zookeeper.
+    ports:
+      - 9092:9092  # Internal Kafka port.
+      - 29092:29092  # External Kafka port.
+    networks:
+      - kafka-network  # Connect to Kafka network.
+    environment:
+      KAFKA_BROKER_ID: 0  # Kafka broker ID.
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181  # Zookeeper connection.
+      KAFKA_ADVERTISED_LISTENERS: LISTENER_INTERNAL://kafka:9092,LISTENER_EXTERNAL://localhost:29092  # Listeners.
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_INTERNAL:PLAINTEXT,LISTENER_EXTERNAL:PLAINTEXT  # Protocols.
+      KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_INTERNAL  # Internal broker communication.
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1  # Replication factor.
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1  # Transaction log replication.
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1  # Minimum in-sync replicas.
+
+  my-python-producer:
+    image: mpradeep954/fetch-de-data-gen  # Custom Python producer.
+    depends_on:
+      - kafka  # Wait for Kafka.
+    restart: on-failure:10  # Restart on failure.
+    ports:
+      - 9093:9093  # Producer port.
+    environment:
+      BOOTSTRAP_SERVERS: kafka:9092  # Kafka connection.
+      KAFKA_TOPIC: user-login  # Kafka topic.
+    networks:
+      - kafka-network  # Connect to Kafka network.
+
+networks:
+  kafka-network:
+    driver: bridge  # Bridge network for services.
