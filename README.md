@@ -127,6 +127,7 @@ Create a consumer.py file with the above code and execute it using:
 ``` $ python consumer.py ```
 
 Step3: The pipeline should continuously ingest data efficiently and processes the data error-free.
+
 Step4: Additionally, it is designed to handle missing fields and other potential errors in the streaming data.
 Overall, the pipeline in composed of Kafka, Docker Compose (includes kafka, Zookeeper and other components) and a Kafka Consumer – written in Python. The kafka consumer will read, process and store data from the user-login topic into a new kafka topic(processed-user-login).
 
