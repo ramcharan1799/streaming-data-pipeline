@@ -137,7 +137,8 @@ kafka-console-consumer --bootstrap-server localhost:9092 --topic processed-user-
 
 Now that we have created a real-time-data- streaming pipeline, we will be able to see the logs. Sample logs of python-consumer and kafka-consumer are attached in the repository.
 
-**Additionally, for: **
+**Additionally, for:**
+
 **Deployment:**
 I would deploy this application by:
 •	Containerize all components (Kafka, Zookeeper, producer, consumer) using Docker.
@@ -162,4 +163,5 @@ As the dataset keeps growing, to make this application scalable:
 •	Implement Kafka Streams for scalable real-time data processing.
 •	Scale Kafka producers to handle higher data generation.
 •	Consider using managed Kafka services (e.g., Confluent Cloud, AWS MSK) for easier scalability.
-![image](https://github.com/user-attachments/assets/67b341b6-f4d1-4b72-b86b-32b28539b0eb)
+
+
